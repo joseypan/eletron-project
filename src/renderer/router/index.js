@@ -7,23 +7,36 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'Home',
-      component: require('@/views/Home').default
+      name: 'Login',
+      component: require('@/views/Login').default
     },
     {
-      path: '/alarm',
-      name: 'Alarm',
-      component: () => import('@/views/Alarm.vue')
-    },
-    {
-      path: '/report',
-      name: 'Report',
-      component: () => import('@/views/Report.vue')
-    },
-    {
-      path: '/keywords',
-      name: 'Keywords',
-      component: () => import('@/views/Keywords.vue')
+      path: '/main',
+      name: 'Main',
+      component: () => import('@/views/Main.vue'),
+      redirect: '/home',
+      children: [
+        {
+          path: '/home',
+          name: 'Home',
+          component: () => import('@/views/Home.vue')
+        },
+        {
+          path: '/alarm',
+          name: 'Alarm',
+          component: () => import('@/views/Alarm.vue')
+        },
+        {
+          path: '/report',
+          name: 'Report',
+          component: () => import('@/views/Report.vue')
+        },
+        {
+          path: '/keywords',
+          name: 'Keywords',
+          component: () => import('@/views/Keywords.vue')
+        }
+      ]
     }
   ]
 })

@@ -8,10 +8,14 @@ import store from './store'
 // 引入element-ui
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
+// 引入echarts
+import * as echarts from 'echarts'
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
 Vue.http = Vue.prototype.$http = axios
+Vue.prototype.$echarts = echarts
 Vue.config.productionTip = false
 Vue.use(ElementUI)
+
 /* eslint-disable no-new */
 new Vue({
   components: { App },
