@@ -31,15 +31,19 @@
         </el-form-item>
       </el-form>
     </div>
-    <Loading v-show="isLoading" />
+    <!-- <Loading v-show="isLoading" /> -->
+    <LoadingWave v-show="isLoading" />
   </div>
 </template>
 <script>
 import Loading from '../components/common/Loading'
+import LoadingWave from '../components/common/LoadingWave'
+import { loginPath } from '../request/api'
 export default {
   name: 'Login',
   components: {
-    Loading
+    Loading,
+    LoadingWave
   },
   data () {
     return {
@@ -52,13 +56,24 @@ export default {
     }
   },
   methods: {
-    turnToMain () {
-      console.log('点击了')
-      //   this.$router.push('/main')
-      const { ipcRenderer } = this.$electron
-      console.log(ipcRenderer)
-      ipcRenderer.send('userLogin', 'successful')
-      this.isLoading = false
+    async turnToMain () {
+      // 判断用户是否有未填项
+      if (this.userForm.username && this.userForm.password) {
+        this.isLoading = true
+        let res = await this.$request({
+          type: 'post',
+          url: loginPath,
+          params: this.userForm
+        })
+        this.isLoading = false
+        if (res) {
+          localStorage.setItem('userInfo', JSON.stringify(res))
+          const { ipcRenderer } = this.$electron
+          ipcRenderer.send('userLogin', 'successful')
+        }
+      } else {
+        this.$message.warning('用户名或密码为空！')
+      }
     },
     changeStatus () {
       this.isShow = !this.isShow

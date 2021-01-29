@@ -14,27 +14,22 @@
       <!-- 弹出框 -->
       <el-dialog title="添加关键词" :visible.sync="dialogFormVisible">
         <el-form :model="form">
-          <el-form-item label="标题" :label-width="formLabelWidth">
-            <el-input v-model="form.title" autocomplete="off"></el-input>
-          </el-form-item>
           <el-form-item label="必须包含关键词" :label-width="formLabelWidth">
-            <el-input v-model="form.required" autocomplete="off"></el-input>
+            <el-input v-model="form.keyword" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item label="可包含关键词" :label-width="formLabelWidth">
-            <el-input v-model="form.included" autocomplete="off"></el-input>
+            <el-input v-model="form.may_keyword" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item label="不包含关键词" :label-width="formLabelWidth">
-            <el-input v-model="form.unincluded" autocomplete="off"></el-input>
+            <el-input v-model="form.nokeyword" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item label="监控频率" :label-width="formLabelWidth">
-            <el-input v-model="form.monitorRate" autocomplete="off"></el-input>
+            <el-input v-model="form.frequency" autocomplete="off"></el-input>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisible = false">取 消</el-button>
-          <el-button type="primary" @click="dialogFormVisible = false"
-            >确 定</el-button
-          >
+          <el-button type="primary" @click="submitKeywords">确 定</el-button>
         </div>
       </el-dialog>
     </div>
@@ -76,17 +71,17 @@
   </div>
 </template>
 <script>
+import addKeywordsPath from '../request/api'
 export default {
   name: 'Keywords',
   data () {
     return {
       dialogFormVisible: false, // 弹出框是否可见
       form: {
-        title: '', // 标题
-        required: '', // 必须包含
-        included: '', // 可包含
-        unincluded: '', // 不包含
-        monitorRate: '' // 监控频率
+        keyword: '', // 必须包含
+        may_keyword: '', // 可包含
+        nokeyword: '', // 不包含
+        frequency: '' // 监控频率
       },
       formLabelWidth: '120px',
       tableData: [
@@ -190,6 +185,20 @@ export default {
      */
     pageChange (e) {
       console.log(e)
+    },
+    async submitKeywords () {
+      console.log(addKeywordsPath)
+      // let data = {
+      //   ...this.form,
+      //   sign: JSON.parse(localStorage.getItem('userInfo')).salt,
+      //   uid: JSON.parse(localStorage.getItem('userInfo')).id
+      // }
+      // let res = await this.$request({
+      //   type: 'post',
+      //   params: data,
+      //   url: addKeywords
+      // })
+      // console.log(res)
     }
   }
 }

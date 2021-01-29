@@ -14,8 +14,8 @@ export default {
 <style lang="scss" scoped>
 $colors: hsla(337, 84, 48, 0.75) hsla(160, 50, 48, 0.75) hsla(190, 61, 65, 0.75)
   hsla(41, 82, 52, 0.75);
-$size: 2.5em;
-$thickness: 0.5em;
+$size: 2.5em; // loader图形的大小
+$thickness: 0.5em; 
 
 // Calculated variables.
 $lat: ($size - $thickness) / 2;
