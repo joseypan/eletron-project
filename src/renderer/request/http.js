@@ -33,7 +33,7 @@ axios.interceptors.response.use(
   response => {
     if (response.data.success) {
       // 响应成功
-      return response.data.result
+      return response.data.result ? response.data.result : response.data.message
     } else {
       // 响应失败
       Message({

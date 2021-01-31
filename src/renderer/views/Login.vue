@@ -31,8 +31,8 @@
         </el-form-item>
       </el-form>
     </div>
-    <!-- <Loading v-show="isLoading" /> -->
-    <LoadingWave v-show="isLoading" />
+    <Loading v-show="isLoading" />
+    <!-- <LoadingWave v-show="isLoading" /> -->
   </div>
 </template>
 <script>
