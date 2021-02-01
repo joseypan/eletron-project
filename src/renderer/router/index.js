@@ -32,6 +32,16 @@ export default new Router({
           component: () => import('@/views/Report.vue')
         },
         {
+          path: '/positiveReport',
+          name: 'PositiveReport',
+          component: () => import('@/views/PositiveReport.vue')
+        },
+        {
+          path: '/negativeReport',
+          name: 'NegativeReport',
+          component: () => import('@/views/NegativeReport.vue')
+        },
+        {
           path: '/keywords',
           name: 'Keywords',
           component: () => import('@/views/Keywords.vue')

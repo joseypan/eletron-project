@@ -14,8 +14,8 @@
               ><i class="el-icon-menu"></i>舆情报告</template
             >
             <el-menu-item index="/report">全部舆情</el-menu-item>
-            <el-menu-item index="2-2">正面舆情</el-menu-item>
-            <el-menu-item index="2-2">负面舆情</el-menu-item>
+            <el-menu-item index="/positiveReport">正面舆情</el-menu-item>
+            <el-menu-item index="/negativeReport">负面舆情</el-menu-item>
           </el-submenu>
           <el-submenu index="3">
             <template slot="title"

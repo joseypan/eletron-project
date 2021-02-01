@@ -12,31 +12,81 @@
   </div>
 </template>
 <script>
+import { getPieDataPath, getBarDataPath } from '../request/api'
+import sign from '../tools/sign'
 export default {
   name: 'Home',
   data () {
     return {
       pieChart: '', // 饼状图实例
-      barChart: '' // 柱状图实例
+      barChart: '', // 柱状图实例
+      userInfo: {},
+      pieData: []
     }
+  },
+  created () {
+    this.getPieData()
+    this.getBarData()
   },
   mounted () {
     this.$nextTick(() => {
-      this._initPieChart()
-      this._initBarChart()
       window.onresize = () => {
         this.resize()
       }
     })
   },
   methods: {
+    /**
+     * 描述：处理生成方法需要的签名
+     * @param { Object } options 包含生成签名的类型以及用户信息
+     * @return { String } 生成的签名字符串
+     */
+    handleSign (options) {
+      this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
+      let signStr = sign({
+        ...options,
+        uid: this.userInfo.id,
+        salt: this.userInfo.salt // 安全随机数
+      })
+      return signStr
+    },
+    async getPieData () {
+      let signStr = this.handleSign({
+        a: 'areaOptions'
+      })
+      let res = await this.$request({
+        url: `${getPieDataPath}&sign=${signStr}&uid=${this.userInfo.id}`,
+        type: 'get',
+        params: null
+      })
+      let arr = res.result
+      let dataArr = []
+      arr.forEach(item => {
+        dataArr.push({
+          name: item.name,
+          value: item.count
+        })
+      })
+      this.pieData = dataArr
+      this._initPieChart()
+    },
+    async getBarData () {
+      let signStr = this.handleSign({
+        a: 'columnOptions'
+      })
+      let res = await this.$request({
+        url: `${getBarDataPath}&sign=${signStr}&uid=${this.userInfo.id}`,
+        type: 'get',
+        params: null
+      })
+      this._initBarChart(res.result)
+    },
     // 初始化饼状图
     _initPieChart () {
       this.pieChart = this.$echarts.init(this.$refs.piechart)
       let option = {
         title: {
-          text: '某站点用户访问来源',
-          subtext: '纯属虚构',
+          text: '舆情关键词数量分布图',
           left: 'center'
         },
         tooltip: {
@@ -51,13 +101,7 @@ export default {
             name: '访问来源',
             type: 'pie',
             radius: '50%',
-            data: [
-              { value: 1048, name: '搜索引擎' },
-              { value: 735, name: '直接访问' },
-              { value: 580, name: '邮件营销' },
-              { value: 484, name: '联盟广告' },
-              { value: 300, name: '视频广告' }
-            ],
+            data: this.pieData,
             emphasis: {
               itemStyle: {
                 shadowBlur: 10,
@@ -70,8 +114,11 @@ export default {
       }
       this.pieChart.setOption(option)
     },
-    // 初始化柱状图
-    _initBarChart () {
+    /**
+     * 描述：初始化柱状图
+     * @param { Array } arr 请求获取的数据
+     */
+    _initBarChart (arr) {
       this.barChart = this.$echarts.init(this.$refs.barchart)
       let option = {
         title: {
@@ -119,22 +166,9 @@ export default {
         ],
         series: [
           {
-            name: '蒸发量',
+            name: arr[0].name,
             type: 'bar',
-            data: [
-              2.0,
-              4.9,
-              7.0,
-              23.2,
-              25.6,
-              76.7,
-              135.6,
-              162.2,
-              32.6,
-              20.0,
-              6.4,
-              3.3
-            ],
+            data: arr[0].data,
             markPoint: {
               data: [
                 { type: 'max', name: '最大值' },
@@ -146,22 +180,9 @@ export default {
             }
           },
           {
-            name: '降水量',
+            name: arr[1].name,
             type: 'bar',
-            data: [
-              2.6,
-              5.9,
-              9.0,
-              26.4,
-              28.7,
-              70.7,
-              175.6,
-              182.2,
-              48.7,
-              18.8,
-              6.0,
-              2.3
-            ],
+            data: arr[1].data,
             markPoint: {
               data: [
                 { name: '年最高', value: 182.2, xAxis: 7, yAxis: 183 },

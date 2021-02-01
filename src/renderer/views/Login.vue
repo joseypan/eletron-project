@@ -66,8 +66,8 @@ export default {
           params: this.userForm
         })
         this.isLoading = false
-        if (res) {
-          localStorage.setItem('userInfo', JSON.stringify(res))
+        if (res.result) {
+          localStorage.setItem('userInfo', JSON.stringify(res.result))
           const { ipcRenderer } = this.$electron
           ipcRenderer.send('userLogin', 'successful')
         }

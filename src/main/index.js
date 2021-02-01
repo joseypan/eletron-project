@@ -78,6 +78,7 @@ function createMainWin () {
   mainWindow.on('closed', () => {
     mainWindow = null
   })
+  require('./modules/menu')
 }
 /**
  * Auto Updater

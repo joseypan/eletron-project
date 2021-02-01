@@ -3,7 +3,7 @@
 * @Author: 潘旭敏
 * @Date: 2021-01-27
 * @LastEditors: 潘旭敏
-* @LastEditTime:2021-01-27 14:46
+* @LastEditTime:2021-02-01 17:08
  -->
 <template>
   <div id="app">
@@ -16,6 +16,22 @@ export default {
   name: 'electron-project',
   data () {
     return {}
+  },
+  mounted () {
+    // window.addEventListener('online', () => {
+    //   console.log('在线状态')
+    // })
+    // window.addEventListener('offline', () => {
+    //   const option = {
+    //     title: '提示！',
+    //     body: '网络已经断开了，请检查您的网络设置'
+    //   }
+    //   new Notification(option)
+    // })
+    window.addEventListener('contextmenu', (event) => {
+      event.preventDefault()
+      this.$electron.ipcRenderer.send('context')
+    })
   }
 }
 </script>

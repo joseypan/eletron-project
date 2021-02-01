@@ -31,9 +31,13 @@ if (process.env.NODE_ENV === 'development') {
 // 响应拦截器
 axios.interceptors.response.use(
   response => {
-    if (response.data.success) {
+    if (
+      response.data.success ||
+      response.data.result ||
+      response.statusText === 'OK'
+    ) {
       // 响应成功
-      return response.data.result ? response.data.result : response.data.message
+      return response.data
     } else {
       // 响应失败
       Message({
@@ -61,14 +65,27 @@ export default function request (options) {
   return new Promise((resolve, reject) => {
     if (options.type === 'get') {
       // get方式请求
-      axios
-        .get(options.url, options.params)
-        .then(res => {
-          resolve(res)
-        })
-        .catch(err => {
-          reject(err)
-        })
+      if (!options.params) {
+        axios
+          .get(options.url)
+          .then(res => {
+            resolve(res)
+          })
+          .catch(err => {
+            reject(err)
+          })
+      } else {
+        axios
+          .get(options.url, {
+            params: options.params
+          })
+          .then(res => {
+            resolve(res)
+          })
+          .catch(err => {
+            reject(err)
+          })
+      }
     } else if (options.type === 'post') {
       // post方式请求
       axios

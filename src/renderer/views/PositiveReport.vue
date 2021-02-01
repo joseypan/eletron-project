@@ -33,7 +33,7 @@
         <el-table-column prop="title" label="标题/地址"> </el-table-column>
         <el-table-column prop="type" label="舆情类型" width="80px">
           <template slot-scope="scope">
-            <span>{{ scope.row.type | handleType }}</span>
+            <span>{{ scope.row.type | handleType}}</span>
           </template>
         </el-table-column>
         <el-table-column prop="keywords" label="舆情关键词" width="100px">
@@ -123,7 +123,8 @@ export default {
         start_time:
           this.startDate === '' ? '' : moment(this.startDate).valueOf() / 1000,
         end_time:
-          this.endDate === '' ? '' : moment(this.endDate).valueOf() / 1000
+          this.endDate === '' ? '' : moment(this.endDate).valueOf() / 1000,
+        type: 1
       }
       let res = await this.$request({
         type: 'get',
@@ -147,10 +148,10 @@ export default {
   },
   filters: {
     /**
-    * 描述：处理舆情类型
-    * @param { Number } value 表示舆情类型的数值
-    * @return { String } 数值对应的文字
-    */
+     * 描述：处理舆情类型
+     * @param { Number } value 表示舆情类型的数值
+     * @return { String } 数值对应的文字
+     */
     handleType (value) {
       if (value === '-1') {
         return '负面消息'
