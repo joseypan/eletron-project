@@ -46,7 +46,12 @@
       "icon": "build/icons/icon.icns"
     },
     "win": {
-      "icon": "build/icons/icon.ico"
+      "icon": "build/icons/happy.ico",
+      "target": "nsis"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
     },
     "linux": {
       "icon": "build/icons"
@@ -57,6 +62,7 @@
     "echarts": "^5.0.1",
     "element-ui": "^2.13.2",
     "moment": "^2.29.1",
+    "nedb": "^1.8.0",
     "spark-md5": "^3.0.1",
     "vue": "^2.5.16",
     "vue-electron": "^1.0.6",

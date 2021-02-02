@@ -26,6 +26,28 @@
             ></i>
           </el-input>
         </el-form-item>
+        <div class="options">
+          <div class="remember">
+            <label>
+              <input
+                type="checkbox"
+                id="remember"
+                v-model="isRemember"
+                @change="changeRememberState"
+              />记住密码</label
+            >
+          </div>
+          <div class="auto-login">
+            <label>
+              <input
+                type="checkbox"
+                id="remember"
+                v-model="isAutoLogin"
+                @change="changeRememberState"
+              />自动登录</label
+            >
+          </div>
+        </div>
         <el-form-item>
           <el-button type="primary" @click="turnToMain">登录</el-button>
         </el-form-item>
@@ -52,8 +74,13 @@ export default {
         password: ''
       },
       isShow: false,
-      isLoading: false
+      isLoading: false,
+      isRemember: false,
+      isAutoLogin: false
     }
+  },
+  created () {
+    this.showRemeberInfo()
   },
   methods: {
     async turnToMain () {
@@ -77,6 +104,34 @@ export default {
     },
     changeStatus () {
       this.isShow = !this.isShow
+    },
+    changeRememberState () {
+      if (this.userForm.username && this.userForm.password) {
+        if (this.isRemember) {
+          // 用户需要记住密码
+          this.$db.insert(
+            {
+              userForm: this.userForm,
+              isAutoLogin: this.isAutoLogin
+            },
+            (err, ret) => {
+              console.log(err, ret)
+            }
+          )
+        }
+      }
+    },
+    showRemeberInfo () {
+      this.$db.find({ 'userForm.username': 'admin' }, (err, ret) => {
+        console.log(err, ret)
+        if (err || ret.length === 0) {
+          return
+        }
+        this.userForm = ret[0].userForm
+        if (ret[0].isAutoLogin) {
+          this.turnToMain()
+        }
+      })
     }
   }
 }
@@ -96,6 +151,21 @@ export default {
     transform: translate(-50%, -50%);
     -webkit-app-region: no-drag;
     text-align: center;
+    .options {
+      display: flex;
+      justify-content: space-between;
+      .remember {
+        text-align: left;
+        font-size: 14px;
+        color: #bbb;
+      }
+      .auto-login {
+        text-align: right;
+        font-size: 14px;
+        color: #bbb;
+      }
+    }
+
     .el-button {
       margin-top: 10px;
       width: 80%;

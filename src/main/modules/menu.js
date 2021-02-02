@@ -8,6 +8,10 @@ ipcMain.on('context', () => {
     {
       label: '复制',
       role: 'copy'
+    },
+    {
+      label: '粘贴',
+      role: 'paste'
     }
   ]
   const contextMenu = Menu.buildFromTemplate(contextTemplate)
