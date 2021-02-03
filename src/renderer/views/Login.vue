@@ -97,6 +97,12 @@ export default {
           localStorage.setItem('userInfo', JSON.stringify(res.result))
           const { ipcRenderer } = this.$electron
           ipcRenderer.send('userLogin', 'successful')
+        } else {
+          this.$message({
+            message: res.message,
+            type: 'error',
+            duration: 800
+          })
         }
       } else {
         this.$message.warning('用户名或密码为空！')
@@ -108,26 +114,58 @@ export default {
     changeRememberState () {
       if (this.userForm.username && this.userForm.password) {
         if (this.isRemember) {
-          // 用户需要记住密码
-          this.$db.insert(
-            {
-              userForm: this.userForm,
-              isAutoLogin: this.isAutoLogin
-            },
-            (err, ret) => {
-              console.log(err, ret)
+          // 判断是否已存在用户数据，存在则更新，不存在则新增
+          this.$db.find({ 'userForm.username': 'admin' }, (err, ret) => {
+            console.log(err, ret)
+            if (ret.length === 0) {
+              // 用户需要记住密码
+              this.$db.insert(
+                {
+                  userForm: this.userForm,
+                  isAutoLogin: this.isAutoLogin,
+                  isRememberInfo: this.isRemember
+                },
+                (err, ret) => {
+                  console.log(err, ret)
+                }
+              )
+            } else {
+              // 更新用户数据
+              console.log('更新用户数据')
+              this.$db.update(
+                { 'userForm.username': 'admin' },
+                {
+                  $set: {
+                    'userForm.username': this.userForm.username,
+                    'userForm.password': this.userForm.password,
+                    isAutoLogin: this.isAutoLogin,
+                    isRememberInfo: this.isRemember
+                  }
+                },
+                {},
+                (err, ret) => {
+                  console.log('更新', err, ret)
+                }
+              )
             }
-          )
+            console.log(err)
+          })
+        } else {
+          // 移除数据
+          this.$db.remove({ 'userForm.username': 'admin' }, (err, ret) => {
+            console.log(err, ret)
+          })
         }
       }
     },
     showRemeberInfo () {
       this.$db.find({ 'userForm.username': 'admin' }, (err, ret) => {
-        console.log(err, ret)
         if (err || ret.length === 0) {
           return
         }
         this.userForm = ret[0].userForm
+        this.isRemember = ret[0].isRememberInfo
+        this.isAutoLogin = ret[0].isAutoLogin
         if (ret[0].isAutoLogin) {
           this.turnToMain()
         }
