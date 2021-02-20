@@ -8,6 +8,26 @@
 <template>
   <div id="app">
     <router-view />
+    <el-dialog
+      title="正在更新新版本,请稍候..."
+      :visible.sync="dialogVisible"
+      width="60%"
+      :close-on-click-modal="closeOnClickModal"
+      :close-on-press-escape="closeOnPressEscape"
+      :show-close="showClose"
+      center
+    >
+      <div style="width:100%;height:20vh;line-height:20vh;text-align:center">
+        <el-progress
+          status="success"
+          :text-inside="true"
+          :stroke-width="20"
+          :percentage="percentage"
+          :width="strokeWidth"
+          :show-text="true"
+        ></el-progress>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -15,7 +35,27 @@
 export default {
   name: 'electron-project',
   data () {
-    return {}
+    return {
+      dialogVisible: false,
+      closeOnClickModal: false,
+      closeOnPressEscape: false,
+      showClose: false,
+      percentage: 0,
+      strokeWidth: 200
+    }
+  },
+  created () {
+    const { ipcRenderer } = this.$electron
+    // ipcRenderer.send('checkForUpdate')
+    ipcRenderer.on('message', (event, text) => {
+      this.tips = text
+    })
+    ipcRenderer.on('downloadProgress', (event, progressObj) => {
+      this.downloadPercent = progressObj.percent || 0
+    })
+    ipcRenderer.on('isUpdateNow', () => {
+      ipcRenderer.send('isUpdateNow')
+    })
   },
   mounted () {
     // window.addEventListener('online', () => {
@@ -28,10 +68,14 @@ export default {
     //   }
     //   new Notification(option)
     // })
-    window.addEventListener('contextmenu', (event) => {
+    window.addEventListener('contextmenu', event => {
       event.preventDefault()
       this.$electron.ipcRenderer.send('context')
     })
+  },
+  destroyed () {
+    const { ipcRenderer } = this.$electron
+    ipcRenderer.removeAll(['message', 'downloadProgress', 'isUpdateNow'])
   }
 }
 </script>
