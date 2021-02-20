@@ -61,8 +61,14 @@
     "nsis": {
       "oneClick": false,
       "allowElevation": true,
+<<<<<<< HEAD
       "perMachine": false,
       "allowToChangeInstallationDirectory": true
+=======
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+>>>>>>> 73da7b0de909c584c44a104ed7580bcafcc3743b
     },
     "linux": {
       "icon": "build/icons"
