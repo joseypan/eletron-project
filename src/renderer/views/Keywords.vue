@@ -197,7 +197,8 @@ export default {
      */
     editKeywords (data) {
       this.editDialogFormVisible = true
-      this.editFormData = data
+      let copyEditFormData = JSON.stringify(data)
+      this.editFormData = JSON.parse(copyEditFormData)
     },
     // 提交修改表单
     async submitEdit () {
